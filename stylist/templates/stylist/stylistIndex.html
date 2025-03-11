@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylist Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            flex: 1;
+        }
+
+        header {
+            background-color: #080a0c;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+
+        header a {
+            color: #ffd700;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+
+        header a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Stylist Dashboard</h1>
+        <nav>
+            <a href="/stylist/my_data/">My Data</a>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <!-- Main Content -->
+        <h1 class="text-center mb-4">Stylist Dashboard</h1>
+
+        <!-- Add Time Slot Form -->
+        <div class="mb-5">
+            <h4>Add Time Slot</h4>
+            <form id="time-slot-form">
+                <div class="mb-3">
+                    <label for="start_time" class="form-label">Start Time</label>
+                    <input type="time" id="start_time" name="start_time" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="end_time" class="form-label">End Time</label>
+                    <input type="time" id="end_time" name="end_time" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="end_time" class="form-label">Date</label>
+                    <input type="date" id="date" name="date" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="sendTime()">Add Time Slot</button>
+            </form>
+        </div>
+
+        <!-- Add Service Form -->
+        <div>
+            <h4>Add Service</h4>
+            <form id="service-form">
+                <div class="mb-3">
+                    <label for="service_name" class="form-label">Service Name</label>
+                    <input type="text" id="service_name" name="service_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="service_name" class="form-label">Service description</label>
+                    <input type="text" id="service_description" name="service_description" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="service_price" class="form-label">Price</label>
+                    <input type="number" id="service_price" name="service_price" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="service_price" class="form-label">Duration</label>
+                    <input type="number" id="service_duration" name="service_duration" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" onclick="sendService()">Add Service</button>
+            </form>
+            <br>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Salon Management System. All rights reserved.</p>
+        <p>
+            Need help? <a href="/contact-us">Contact Us</a>
+        </p>
+    </footer>
+
+    <script>
+        function sendTime() {
+            event.preventDefault();
+            const formData = {
+                start: document.getElementById('start_time').value,
+                end: document.getElementById('end_time').value,
+                date: document.getElementById('date').value,
+            };
+            fetch('/stylist/new_time/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(formData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('خطا در ارسال اطلاعات');
+                    }
+                })
+                .then(data => {
+                    alert('رزرو شما ثبت شد!');
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function sendService() {
+            event.preventDefault();
+            const formData = {
+                service: document.getElementById('service_name').value,
+                price: document.getElementById('service_price').value,
+                duration: document.getElementById('service_duration').value,
+                description: document.getElementById('service_description').value,
+            };
+            fetch('/stylist/new_service/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
+                },
+                body: JSON.stringify(formData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('خطا در ارسال اطلاعات');
+                    }
+                })
+                .then(data => {
+                    alert('خدمت شما ثبت شد!');
+                    console.log(data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function getCSRFToken() {
+            return document.cookie.split('; ').find(row => row.startsWith('csrftoken=')).split('=')[1];
+        }
+    </script>
+</body>
+
+</html>

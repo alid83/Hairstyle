@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مدیریت رزروها</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet"
+          type="text/css"/>
+    <style>
+        body {
+            font-family: Vazirmatn, sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .status-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .table-container {
+            background: linear-gradient(to bottom, #ffffff 0%, #f9fafb 100%);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .table-header {
+            background: linear-gradient(to bottom, #f9fafb 0%, #f3f4f6 100%);
+            font-weight: 600;
+        }
+
+        .table-row {
+            transition: all 0.2s;
+        }
+
+        .table-row:hover {
+            background-color: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header style="background-color: #080a0c; color: #a77828; padding: 15px 0; text-align: center;">
+    <h1>Reservation management</h1>
+    <p>Manage your appointments</p>
+</header>
+
+<!-- Main Content -->
+<div class="min-h-screen p-8 bg-gray-100">
+    <div class="max-w-6xl mx-auto">
+        <div class="table-container rounded-xl overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">تاریخچه رزروها</h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                    <tr class="table-header text-gray-600">
+                        <th class="px-8 py-4 text-right text-sm">خدمت</th>
+                        <th class="px-6 py-4 text-right text-sm">تاریخ</th>
+                        <th class="px-6 py-4 text-right text-sm">ساعت</th>
+                        <th class="px-6 py-4 text-right text-sm">آرایشگر</th>
+                        <th class="px-6 py-4 text-right text-sm">قیمت (تومان)</th>
+                        <th class="px-8 py-4 text-right text-sm">وضعیت</th>
+                    </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                    {% for appointment in upcoming_appointments %}
+                        <tr class="table-row">
+                            <td class="px-8 py-5">
+                                <div class="text-sm font-medium text-gray-900">{{ appointment.service.service_name }}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm text-gray-600">{{ appointment.service.appointment_date }}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm text-gray-600">{{ appointment.timeslot }}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm text-gray-600">{{ appointment.stylist.get_full_name }}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm font-medium text-gray-900">{{ appointment.service.price }}</div>
+                            </td>
+                            <td class="px-8 py-5">
+                                    <span class="status-badge bg-red-100 text-red-800">
+                                        {{ appointment.status }}
+                                    </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer style="background-color: #333; color: #707070; padding: 15px 0; text-align: center;">
+    <p>&copy; 2025 Appointment Manager. All rights reserved</p>
+    <p>
+        Need help? <a href="/contact-us" style="color: #ffd700; text-decoration: none;">Contact Us</a>
+    </p>
+</footer>
+</body>
+</html>

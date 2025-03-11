@@ -1,0 +1,8 @@
+<h1>Confirm Appointment</h1>
+<p>Stylist: {{ stylist.get_full_name }}</p>
+<p>Service: {{ service.service_name }}</p>
+<p>Time: {{ time_slot.date }} ({{ time_slot.start_time }} - {{ time_slot.end_time }})</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Confirm Appointment</button>
+</form>
